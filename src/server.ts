@@ -1,12 +1,15 @@
-import express from 'express';
+import express from "express";
+import { Routes } from "./routes";
+import { Middleware } from "./middlewares";
 // import { Middleware } from './middleware';
-// import { Routes } from './routes';
 
-const app = express();
-// Middleware(app);
-// Routes(app);
+const Main = () => {
+  const app = express();
 
-app.listen(3000, () => {
-    console.log('🚀 🚀 🚀 🚀 Server running on port 3000🚀 🚀 🚀 🚀 ');
-    }
-);
+  Middleware(app);
+  Routes(app);
+  app.listen(8000, () => {
+    console.log("🚀 🚀 🚀 🚀 Server running on port 8000🚀 🚀 🚀 🚀 ");
+  });
+};
+Main();

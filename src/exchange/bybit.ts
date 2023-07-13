@@ -1,13 +1,23 @@
-import { LinearClient } from "bybit-api";
+import {
+  LinearClient,
+  LinearOrder,
+  LinearPositionIdx,
+  NewLinearOrder,
+} from "bybit-api";
+import { Order } from "../types/exchange";
 
 export class Bybit {
   client: LinearClient;
 
-  constructor(API_KEY: string, API_SECRET: string, testnet: boolean) {
+  constructor(
+    BYBIT_API_KEY: string,
+    BYBIT_API_SECRET: string,
+    testnet: boolean
+  ) {
     this.client = new LinearClient({
-      key: API_KEY,
-      secret: API_SECRET,
-      testnet,
+      key: BYBIT_API_KEY,
+      secret: BYBIT_API_SECRET,
+      testnet:true,
     });
   }
 
@@ -30,6 +40,37 @@ export class Bybit {
         throw new Error(ret_msg);
       }
     } catch (error) {}
+    return null;
+  };
+
+  //Make a order
+  placeOrder = async (params: NewLinearOrder): Promise<Order | null> => {
+    const { ret_code, ret_msg, result } = await this.client.placeActiveOrder(
+      params
+    );
+console.log("result",result,"ret_code",ret_code,"ret_msg",ret_msg);
+
+    if (ret_code == 0 && result) {
+      return {
+        id: result.order_id,
+        market: result.symbol,
+        side: result.side,
+        type: result.order_type,
+        price: result.price,
+        quantity: result.qty,
+        status: result.order_status,
+        filled: result.cum_exec_qty,
+        remaining: result.qty - result.cum_exec_qty,
+        createdAt: new Date(result.created_time),
+      };
+    }
+
+    if (ret_msg?.includes("Qty not in range")) {
+      console.log(`Qty not in range:, try again`);
+    }
+    console.log(`Error placing order: ${ret_msg}`);
+    
+
     return null;
   };
 }
