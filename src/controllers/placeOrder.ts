@@ -26,7 +26,7 @@ async function placeOrder(req: Request, res: Response) {
       symbol,
       orderType: "Limit" || "Market",
       qty,
-      timeInForce: "PostOnly",
+      timeInForce: "GTC",
       reduceOnly: false,
       closeOnTrigger: false,
     });
