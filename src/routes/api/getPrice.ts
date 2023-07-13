@@ -1,8 +1,8 @@
-// import { Router } from 'express';
-// import { getPrice } from '../../controllers/getPrice';
+import { Router } from 'express';
+import { getPrice } from '../../controllers/getPrice';
 
-// const router = Router();
+const router = Router();
 
-// router.get('/getPrice', getPrice);
+router.get('/v5/market/tickers', getPrice);
 
-// export { router as getPriceRouter}
+export { router as getPriceRouter}
