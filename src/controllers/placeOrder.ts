@@ -30,7 +30,11 @@ async function placeOrder(req: Request, res: Response) {
       reduceOnly: false,
       closeOnTrigger: false,
     });
-    res.status(200).json(orderPlaced);
+    res.status(200).json({
+      status: "success",
+      message: "Order placed successfully",
+      data: orderPlaced,
+    })
   } catch (error) {
     res.status(500).json({
       status: "failed",

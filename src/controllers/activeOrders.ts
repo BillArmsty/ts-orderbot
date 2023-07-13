@@ -26,8 +26,12 @@ async function activeOrders(req: Request, res: Response) {
         
 
       });
-      res.status(200).json(ordersActive);
-      console.log(ordersActive);
+      res.status(200).json({
+        status: "success",
+        message: "Orders fetched successfully",
+        data: ordersActive,
+      })
+      
       
     } catch (error) {
       res.status(500).json({
