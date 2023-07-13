@@ -1,74 +1,51 @@
 import {
-  LinearClient,
-  LinearOrder,
-  LinearPositionIdx,
   NewLinearOrder,
+  RestClientV5,
+  OrderParamsV5,
+  OrderResultV5,
 } from "bybit-api";
 import { Order } from "../types/exchange";
 
+
 export class Bybit {
-  client: LinearClient;
+  client: RestClientV5;
 
   constructor(
     BYBIT_API_KEY: string,
     BYBIT_API_SECRET: string,
     testnet: boolean
   ) {
-    this.client = new LinearClient({
+    this.client = new RestClientV5({
       key: BYBIT_API_KEY,
       secret: BYBIT_API_SECRET,
       testnet:true,
     });
   }
 
-  // Get the latest price for a symbol
-  getPrice = async (symbol: string): Promise<number | null> => {
-    try {
-      const { ret_code, result, ret_msg } = await this.client.getTickers({
-        symbol,
-      });
-      let _result = result.find(
-        (item: { symbol: string }) => item.symbol === symbol
-      );
-      if (ret_code === 0) {
-        return _result.last_price;
-      }
-      console.log(result);
-      if (ret_code === 0 && _result[0]) {
-        return _result[0]?.symbol.last_price;
-      } else {
-        throw new Error(ret_msg);
-      }
-    } catch (error) {}
-    return null;
-  };
-
   //Make a order
-  placeOrder = async (params: NewLinearOrder): Promise<Order | null> => {
-    const { ret_code, ret_msg, result } = await this.client.placeActiveOrder(
+  placeOrder = async (params: OrderParamsV5): Promise< OrderResultV5| null> => {
+    try {
+    const { retCode, retMsg, result } = await this.client.submitOrder(
       params
     );
-console.log("result",result,"ret_code",ret_code,"ret_msg",ret_msg);
+console.log("result",result,"retCode",retCode,"retMsg",retMsg);
 
-    if (ret_code == 0 && result) {
+    if (retCode == 0 && retMsg == "OK") {
       return {
-        id: result.order_id,
-        market: result.symbol,
-        side: result.side,
-        type: result.order_type,
-        price: result.price,
-        quantity: result.qty,
-        status: result.order_status,
-        filled: result.cum_exec_qty,
-        remaining: result.qty - result.cum_exec_qty,
-        createdAt: new Date(result.created_time),
+        orderId: result.orderId,
+        orderLinkId: result.orderLinkId,
+
       };
     }
 
-    if (ret_msg?.includes("Qty not in range")) {
+    if (retMsg?.includes("Qty not in range")) {
       console.log(`Qty not in range:, try again`);
     }
-    console.log(`Error placing order: ${ret_msg}`);
+   // console.log(`Error placing order: ${retMsg}`);
+    
+  } catch (error) {
+    console.log(`Error placing order: ${error}`);
+  }
     
 
     return null;

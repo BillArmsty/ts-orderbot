@@ -2,41 +2,41 @@ import { CONFIG } from "../config/config";
 import { Bybit } from "../exchange/bybit";
 import { Request, Response } from "express";
 
+async function placeOrder(req: Request, res: Response) {
+  try {
+    const { side, symbol, qty, orderType, price } = req.body;
 
-
-
- async function placeOrder  (req: Request, res: Response) {
-    try {
-    const { side, symbol, qty, order_type } = req.body;
-    console.log("side", side, "symbol", symbol, "qty", qty, "order_type", order_type);
-    
-    if (!side || !symbol || !qty || !order_type) {
+    if (!side || !symbol || !qty || !orderType || !price) {
       return res.status(200).json({
         status: "failed",
-        error: "Please specify the side, symbol, quantity and order type",
+        error:
+          "Please specify the side, symbol, quantity, price and order type",
       });
     }
     const bybit = new Bybit(
-        CONFIG.BYBIT_API_KEY,
-        CONFIG.BYBIT_API_SECRET,
-        CONFIG.BYBIT_TESTNET === "true"
-        );
+      CONFIG.BYBIT_API_KEY,
+      CONFIG.BYBIT_API_SECRET,
+      CONFIG.BYBIT_TESTNET === "true"
+    );
 
+    const orderPlaced = await bybit.placeOrder({
+      category: "linear",
+      price,
+      side,
+      symbol,
+      orderType: "Limit" || "Market",
+      qty,
+      timeInForce: "PostOnly",
+      reduceOnly: false,
+      closeOnTrigger: false,
+    });
+    res.status(200).json(orderPlaced);
+  } catch (error) {
+    res.status(500).json({
+      status: "failed",
+      error: "Error placing order",
+    });
+  }
+}
 
-      const orderPlaced = await bybit.placeOrder({
-        side,
-        symbol,
-        order_type: order_type || "Market",
-        qty,
-        time_in_force: "GoodTillCancel",
-        reduce_only: false,
-        close_on_trigger: false,
-       
-      });
-      res.status(200).json(orderPlaced);
-    } catch (error) {
-      console.log("Error placing order", error);
-    }
-  };
-
-    export {placeOrder}
+export { placeOrder };
