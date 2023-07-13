@@ -5,7 +5,7 @@ import {
   OrderResultV5,
   GetAccountOrdersParamsV5,
   AccountOrderV5,
-  GetAccountHistoricOrdersParamsV5,
+  CancelOrderParamsV5
 } from "bybit-api";
 import { Order } from "../types/exchange";
 
@@ -79,4 +79,23 @@ export class Bybit {
     }
     return [];
   };
+
+  //Cancel Order
+  cancelOrder = async (params: CancelOrderParamsV5): Promise<OrderResultV5 | null> => {
+    try {
+      const { retCode, retMsg, result } = await this.client.cancelOrder(params);
+
+      if (retCode == 0 && retMsg == "OK") {
+        return {
+          orderId: result.orderId,
+          orderLinkId: result.orderLinkId,
+        };
+      }
+    } catch (error) {
+      console.log(`Error cancelling order: ${error}`);
+    }
+
+    return null;
+  };
+
 }
