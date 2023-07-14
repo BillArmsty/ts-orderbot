@@ -4,6 +4,7 @@ import { placeOrderRouter } from "./api/placeOrder";
 import { activeOrdersRouter } from "./api/activeOrders";
 import { cancelOrderRouter } from "./api/cancelOrder";
 import { cancelAllOrdersRouter } from "./api/cancelAllOrders";
+import { historicalOrdersRouter } from "./api/historicalOrders";
 
 export const Routes = (app: Application) => {
   app.get("/ping", (req, res) => {
@@ -15,4 +16,5 @@ export const Routes = (app: Application) => {
   app.use(cancelOrderRouter);
   app.use(getPriceRouter);
   app.use(cancelAllOrdersRouter);
+  app.use(historicalOrdersRouter);
 };
