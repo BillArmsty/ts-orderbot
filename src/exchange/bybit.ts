@@ -9,6 +9,8 @@ import {
   GetTickersParamsV5,
   TickerLinearInverseV5,
   CancelAllOrdersParamsV5,
+  GetWalletBalanceParamsV5,
+  WalletBalanceV5,
 } from "bybit-api";
 import { Order } from "../types/exchange";
 import { log } from "console";
@@ -38,18 +40,14 @@ export class Bybit {
       if (retCode == 0 && retMsg == "OK") {
         let _result = result.category;
         if (_result == "linear") {
-          
           return result.list.map((TickerLinearInverseV5: any) => {
             let _price = TickerLinearInverseV5.lastPrice;
             return _price;
-            
-          
           });
         }
       }
     } catch (error) {
       console.log(`Error getting price: ${error}`);
-      return null;
     }
     return [];
   };
@@ -197,7 +195,6 @@ export class Bybit {
         params
       );
       console.log("result", result);
-      
 
       if (retCode == 0 && retMsg == "OK") {
         let _result = result.list;
@@ -252,6 +249,28 @@ export class Bybit {
     } catch (error) {
       console.log(`Error getting historical orders: ${error}`);
       return null;
+    }
+    return [];
+  };
+
+  //Get Wallet Balance
+  walletBalance = async (
+    params: GetWalletBalanceParamsV5
+  ): Promise<WalletBalanceV5[] | null> => {
+    try {
+      const { retCode, retMsg, result } = await this.client.getWalletBalance(
+        params
+      );
+      console.log("result", result, retCode, retMsg);
+
+      if (retCode == 0 && retMsg == "OK") {
+        return result.list.map((WalletBalanceV5: any) => {
+          let balance = WalletBalanceV5.totalWalletBalance;
+          return balance;
+        });
+      }
+    } catch (error) {
+      console.log(`Error getting wallet balance: ${error}`);
     }
     return [];
   };

@@ -5,6 +5,7 @@ import { activeOrdersRouter } from "./api/activeOrders";
 import { cancelOrderRouter } from "./api/cancelOrder";
 import { cancelAllOrdersRouter } from "./api/cancelAllOrders";
 import { historicalOrdersRouter } from "./api/historicalOrders";
+import { walletBalanceRouter } from "./api/walletBalance";
 
 export const Routes = (app: Application) => {
   app.get("/ping", (req, res) => {
@@ -17,4 +18,6 @@ export const Routes = (app: Application) => {
   app.use(getPriceRouter);
   app.use(cancelAllOrdersRouter);
   app.use(historicalOrdersRouter);
+  app.use(walletBalanceRouter);
+
 };
