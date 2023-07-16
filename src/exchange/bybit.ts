@@ -82,7 +82,7 @@ export class Bybit {
       const { retCode, retMsg, result } = await this.client.getActiveOrders(
         params
       );
-      console.log("result", result);
+      console.log("result", result, "retCode", retCode, "retMsg", retMsg);
 
       if (retCode == 0 && retMsg == "OK") {
         let _result = result.list;

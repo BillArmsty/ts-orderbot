@@ -6,4 +6,5 @@ export const CONFIG = {
     BYBIT_TESTNET:  'true',
     MAIN_URL: process.env.MAIN_URL || '',
     BOT_TOKEN: process.env.BOT_TOKEN || '',
+    WHITELISTED_USERS: process.env.WHITELISTED_USERS || '',
 }
