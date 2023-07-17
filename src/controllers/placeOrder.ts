@@ -9,7 +9,8 @@ async function placeOrder(req: Request, res: Response) {
     if (!side || !symbol || !qty || !orderType || !price) {
       return res.status(200).json({
         status: "failed",
-        error: "Please specify the side, symbol, quantity, price and order type",
+        error:
+          "Please specify the side, symbol, quantity, price and order type",
       });
     }
     const bybit = new Bybit(
@@ -18,15 +19,13 @@ async function placeOrder(req: Request, res: Response) {
       CONFIG.BYBIT_TESTNET === "true"
     );
 
-    
-
     const orderPlaced = await bybit.placeOrder({
       category: "linear",
-      price,
       side,
       symbol,
-      orderType: "Limit" || "Market",
       qty,
+      orderType,
+      price,
       timeInForce: "GTC",
       reduceOnly: false,
       closeOnTrigger: false,
@@ -35,7 +34,7 @@ async function placeOrder(req: Request, res: Response) {
       status: "success",
       message: "Order placed successfully",
       data: orderPlaced,
-    })
+    });
   } catch (error) {
     res.status(500).json({
       status: "failed",
