@@ -61,7 +61,7 @@ bot.command("menu", async (ctx) => {
 
 //Get Price
 bot.action("price", async (ctx) => {
-  ctx.reply(`Enter Symbol and Category ie: BTCUSDT, linear`, {
+  ctx.reply(`Enter Symbol and Category ie: BTCUSDT,linear`, {
     reply_markup: {
       force_reply: true,
     },
@@ -85,7 +85,7 @@ bot.action("price", async (ctx) => {
     });
     console.log(price);
 
-    ctx.reply(`Price of ${symbol} is ${price}`);
+    ctx.reply(`Price of ${symbol} is ${price}`, {parse_mode: "Markdown"});
   });
 });
 
@@ -110,18 +110,18 @@ bot.action("buy", async (ctx) => {
     );
     const orderPlaced = await bybit.placeOrder({
       category: "linear",
-      side,
-      symbol,
-      qty,
-      orderType,
-      price,
+      side: side,
+      symbol : symbol,
+      qty : qty,
+      orderType : orderType,
+      price : price,
 
       timeInForce: "GTC",
       reduceOnly: false,
       closeOnTrigger: false,
     });
     console.log(orderPlaced);
-    ctx.reply(`Buy order placed successfully ${orderPlaced?.orderId}`);
+    ctx.reply(`Buy order placed successfully ${orderPlaced?.orderId}`, {parse_mode: "Markdown"});
     // ctx.reply(`Buy order failed ${orderPlaced?.ret_msg}`)
   });
 });
@@ -146,11 +146,11 @@ bot.action("sell", async (ctx) => {
     );
     const orderPlaced = await bybit.placeOrder({
       category: "linear",
-      side,
-      symbol,
-      qty,
-      orderType,
-      price,
+      side: side,
+      symbol : symbol,
+      qty : qty,
+      orderType : orderType,
+      price : price,
       timeInForce: "GTC",
       reduceOnly: false,
       closeOnTrigger: false,

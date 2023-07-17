@@ -36,8 +36,6 @@ export class Bybit {
   ): Promise<TickerLinearInverseV5[] | null> => {
     try {
       const { retCode, result, retMsg } = await this.client.getTickers(params);
-     
-      
 
       if (retCode == 0 && retMsg == "OK") {
         let _result = result.category;
@@ -87,52 +85,11 @@ export class Bybit {
       console.log("result", result, "retCode", retCode, "retMsg", retMsg);
 
       if (retCode == 0 && retMsg == "OK") {
-        let _result = result.list;
-        if (_result.length > 0) {
+        let _result = result.category;
+        if (_result == "linear") {
           return result.list.map((AccountOrderV5: any) => {
-            return {
-              orderId: AccountOrderV5.orderId,
-              orderLinkId: AccountOrderV5.orderLinkId,
-              blockTradeId: AccountOrderV5.blockTradeId,
-              symbol: AccountOrderV5.symbol,
-              price: AccountOrderV5.price,
-              qty: AccountOrderV5.qty,
-              side: AccountOrderV5.side,
-              isLeverage: AccountOrderV5.isLeverage,
-              positionIdx: AccountOrderV5.positionIdx,
-              orderStatus: AccountOrderV5.orderStatus,
-              cancelType: AccountOrderV5.cancelType,
-              rejectReason: AccountOrderV5.rejectReason,
-              avgPrice: AccountOrderV5.avgPrice,
-              leavesQty: AccountOrderV5.leavesQty,
-              leavesValue: AccountOrderV5.leavesValue,
-              cumExecQty: AccountOrderV5.cumExecQty,
-              cumExecValue: AccountOrderV5.cumExecValue,
-              cumExecFee: AccountOrderV5.cumExecFee,
-              timeInForce: AccountOrderV5.timeInForce,
-              orderType: AccountOrderV5.orderType,
-              stopOrderType: AccountOrderV5.stopOrderType,
-              orderIv: AccountOrderV5.orderIv,
-              triggerPrice: AccountOrderV5.triggerPrice,
-              takeProfit: AccountOrderV5.takeProfit,
-              stopLoss: AccountOrderV5.tpslMode,
-              tpslMode: AccountOrderV5.tpslMode,
-              tpLimitPrice: AccountOrderV5.tpLimitPrice,
-              slLimitPrice: AccountOrderV5.slLimitPrice,
-              tpTriggerBy: AccountOrderV5.tpTriggerBy,
-              slTriggerBy: AccountOrderV5.slTriggerBy,
-              triggerDirection: AccountOrderV5.triggerDirection,
-              triggerBy: AccountOrderV5.triggerBy,
-              lastPriceOnCreated: AccountOrderV5.lastPriceOnCreated,
-              reduceOnly: AccountOrderV5.reduceOnly,
-              closeOnTrigger: AccountOrderV5.closeOnTrigger,
-              placeType: AccountOrderV5.placeType,
-              smpType: AccountOrderV5.smpType,
-              smpGroup: AccountOrderV5.smpGroup,
-              smpOrderId: AccountOrderV5.smpOrderId,
-              createdTime: AccountOrderV5.createdTime,
-              updatedTime: AccountOrderV5.updatedTime,
-            };
+            let _order = AccountOrderV5.orderId;
+            return _order;
           });
         }
       }
@@ -196,55 +153,14 @@ export class Bybit {
       const { retCode, retMsg, result } = await this.client.getHistoricOrders(
         params
       );
-      console.log("result", result);
+      console.log("result", result, "retCode", retCode, "retMsg", retMsg);
 
       if (retCode == 0 && retMsg == "OK") {
-        let _result = result.list;
-        if (_result.length > 0) {
+        let _result = result.category;
+        if (_result == "linear") {
           return result.list.map((AccountOrderV5: any) => {
-            return {
-              orderId: AccountOrderV5.orderId,
-              orderLinkId: AccountOrderV5.orderLinkId,
-              blockTradeId: AccountOrderV5.blockTradeId,
-              symbol: AccountOrderV5.symbol,
-              price: AccountOrderV5.price,
-              qty: AccountOrderV5.qty,
-              side: AccountOrderV5.side,
-              isLeverage: AccountOrderV5.isLeverage,
-              positionIdx: AccountOrderV5.positionIdx,
-              orderStatus: AccountOrderV5.orderStatus,
-              cancelType: AccountOrderV5.cancelType,
-              rejectReason: AccountOrderV5.rejectReason,
-              avgPrice: AccountOrderV5.avgPrice,
-              leavesQty: AccountOrderV5.leavesQty,
-              leavesValue: AccountOrderV5.leavesValue,
-              cumExecQty: AccountOrderV5.cumExecQty,
-              cumExecValue: AccountOrderV5.cumExecValue,
-              cumExecFee: AccountOrderV5.cumExecFee,
-              timeInForce: AccountOrderV5.timeInForce,
-              orderType: AccountOrderV5.orderType,
-              stopOrderType: AccountOrderV5.stopOrderType,
-              orderIv: AccountOrderV5.orderIv,
-              triggerPrice: AccountOrderV5.triggerPrice,
-              takeProfit: AccountOrderV5.takeProfit,
-              stopLoss: AccountOrderV5.tpslMode,
-              tpslMode: AccountOrderV5.tpslMode,
-              tpLimitPrice: AccountOrderV5.tpLimitPrice,
-              slLimitPrice: AccountOrderV5.slLimitPrice,
-              tpTriggerBy: AccountOrderV5.tpTriggerBy,
-              slTriggerBy: AccountOrderV5.slTriggerBy,
-              triggerDirection: AccountOrderV5.triggerDirection,
-              triggerBy: AccountOrderV5.triggerBy,
-              lastPriceOnCreated: AccountOrderV5.lastPriceOnCreated,
-              reduceOnly: AccountOrderV5.reduceOnly,
-              closeOnTrigger: AccountOrderV5.closeOnTrigger,
-              placeType: AccountOrderV5.placeType,
-              smpType: AccountOrderV5.smpType,
-              smpGroup: AccountOrderV5.smpGroup,
-              smpOrderId: AccountOrderV5.smpOrderId,
-              createdTime: AccountOrderV5.createdTime,
-              updatedTime: AccountOrderV5.updatedTime,
-            };
+            let _order = AccountOrderV5.orderId;
+            return _order;
           });
         }
       }
