@@ -71,7 +71,9 @@ bot.action("price", async (ctx) => {
 
   bot.on("text", async (ctx) => {
     const { text }: any = ctx.message;
-    const { symbol, category }: any = text;
+
+    let [symbol, category]: any = normalizeMessage(text).split(",");
+
     const bybit = new Bybit(
       CONFIG.BYBIT_API_KEY,
       CONFIG.BYBIT_API_SECRET,
@@ -83,7 +85,7 @@ bot.action("price", async (ctx) => {
     });
     console.log(price);
 
-    ctx.reply(`Price of ${symbol} is ${price?.map((p) => p.lastPrice)}`);
+    ctx.reply(`Price of ${symbol} is ${price}`);
   });
 });
 
@@ -99,7 +101,8 @@ bot.action("buy", async (ctx) => {
   );
   bot.on("text", async (ctx) => {
     const { text } = ctx.message;
-    const { side, symbol, qty, orderType, price }: any = text;
+    const [side, symbol, qty, orderType, price]: any =
+      normalizeMessage(text).split(",");
     const bybit = new Bybit(
       CONFIG.BYBIT_API_KEY,
       CONFIG.BYBIT_API_SECRET,
