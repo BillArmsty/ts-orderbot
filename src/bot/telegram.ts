@@ -13,20 +13,20 @@ bot.start((ctx) => {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: "📈 Buy Order", callback_data: "placeBuyOrder" },
-            { text: "📈 Sell Order", callback_data: "placeSellOrder" },
+            { text: "📈 Buy Order", callback_data: "buy" },
+            { text: "📈 Sell Order", callback_data: "sell" },
           ],
           [
             { text: "📊 Active Orders", callback_data: "activeOrders" },
-            { text: "📈 Get Price", callback_data: "getPrice" },
+            { text: "📈 Get Price", callback_data: "price" },
           ],
           [
-            { text: "📉 Cancel Order", callback_data: "cancelOrder" },
-            { text: "📉 Cancel All Orders", callback_data: "cancelAllOrders" },
+            { text: "📉 Cancel Order", callback_data: "cancel" },
+            { text: "📉 Cancel All Orders", callback_data: "cancelAll" },
           ],
           [
             { text: "📊 Historical Orders", callback_data: "historicalOrders" },
-            { text: "💰 Wallet Balance", callback_data: "walletBalance" },
+            { text: "💰 Wallet Balance", callback_data: "balance" },
           ],
         ],
       },
@@ -39,20 +39,20 @@ bot.command("menu", async (ctx) => {
     reply_markup: {
       inline_keyboard: [
         [
-          { text: "📈 Buy Order", callback_data: "placeBuyOrder" },
-          { text: "📈 Sell Order", callback_data: "placeSellOrder" },
+          { text: "📈 Buy Order", callback_data: "buy" },
+          { text: "📈 Sell Order", callback_data: "sell" },
         ],
         [
           { text: "📊 Active Orders", callback_data: "activeOrders" },
-          { text: "📈 Get Price", callback_data: "getPrice" },
+          { text: "📈 Get Price", callback_data: "price" },
         ],
         [
-          { text: "📉 Cancel Order", callback_data: "cancelOrder" },
-          { text: "📉 Cancel All Orders", callback_data: "cancelAllOrders" },
+          { text: "📉 Cancel Order", callback_data: "cancel" },
+          { text: "📉 Cancel All Orders", callback_data: "cancelAll" },
         ],
         [
           { text: "📊 Historical Orders", callback_data: "historicalOrders" },
-          { text: "💰 Wallet Balance", callback_data: "walletBalance" },
+          { text: "💰 Wallet Balance", callback_data: "balance" },
         ],
       ],
     },
@@ -60,7 +60,7 @@ bot.command("menu", async (ctx) => {
 });
 
 //Get Price
-bot.command("price", async (ctx) => {
+bot.action("price", async (ctx) => {
   ctx.reply(`Enter Symbol and Category ie: BTCUSDT, linear`, {
     reply_markup: {
       force_reply: true,
@@ -70,7 +70,7 @@ bot.command("price", async (ctx) => {
   //ie: BTCUSDT, linear
 
   bot.on("text", async (ctx) => {
-    const { text } = ctx.message;
+    const { text }: any = ctx.message;
     const { symbol, category }: any = text;
     const bybit = new Bybit(
       CONFIG.BYBIT_API_KEY,
@@ -88,7 +88,7 @@ bot.command("price", async (ctx) => {
 });
 
 //Place BuyOrder
-bot.command("buy", async (ctx) => {
+bot.action("buy", async (ctx) => {
   ctx.reply(
     `Enter side, symbol, qty, orderType, price ie: Buy, BTCUSDT, 1, Limit, 50000`,
     {
@@ -119,11 +119,12 @@ bot.command("buy", async (ctx) => {
     });
     console.log(orderPlaced);
     ctx.reply(`Buy order placed successfully ${orderPlaced?.orderId}`);
+    // ctx.reply(`Buy order failed ${orderPlaced?.ret_msg}`)
   });
 });
 
 //Place SellOrder
-bot.command("sell", async (ctx) => {
+bot.action("sell", async (ctx) => {
   ctx.reply(
     `Enter side, symbol, qty, orderType, price ie: Sell, BTCUSDT, 1, Limit, 50000`,
     {
@@ -157,7 +158,7 @@ bot.command("sell", async (ctx) => {
 });
 
 //Cancel Order
-bot.command("cancel", async (ctx) => {
+bot.action("cancel", async (ctx) => {
   ctx.reply(`Enter symbol,  category , orderId ie: BTCUSDT, linear, 123456`, {
     reply_markup: {
       force_reply: true,
@@ -182,7 +183,7 @@ bot.command("cancel", async (ctx) => {
 });
 
 //Cancel All Orders
-bot.command("cancelAll", async (ctx) => {
+bot.action("cancelAll", async (ctx) => {
   ctx.reply(`Enter symbol,  category ie: BTCUSDT, linear`, {
     reply_markup: {
       force_reply: true,
@@ -206,7 +207,7 @@ bot.command("cancelAll", async (ctx) => {
 });
 
 //Get Active Orders
-bot.command("activeOrders", async (ctx) => {
+bot.action("activeOrders", async (ctx) => {
   ctx.reply(`Enter symbol,  category ie: BTCUSDT, linear`, {
     reply_markup: {
       force_reply: true,
@@ -228,4 +229,55 @@ bot.command("activeOrders", async (ctx) => {
     ctx.reply(`Active orders are ${activeOrders?.map((a) => a.orderId)}`);
   });
 });
+
+//Get Historical Orders
+bot.action("historicalOrders", async (ctx) => {
+  ctx.reply(`Enter symbol,  category ie: BTCUSDT, linear`, {
+    reply_markup: {
+      force_reply: true,
+    },
+  });
+  bot.on("text", async (ctx) => {
+    const { text } = ctx.message;
+    const { symbol, category }: any = text;
+    const bybit = new Bybit(
+      CONFIG.BYBIT_API_KEY,
+      CONFIG.BYBIT_API_SECRET,
+      CONFIG.BYBIT_TESTNET === "true"
+    );
+    const historicalOrders = await bybit.historicalOrders({
+      symbol,
+      category,
+    });
+    console.log(historicalOrders);
+    ctx.reply(
+      `Historical orders are ${historicalOrders?.map((h) => h.orderId)}`
+    );
+  });
+});
+
+//Get Balance
+bot.action("balance", async (ctx) => {
+  ctx.reply(`Enter  accountType and symbol ie: UNIFIED, BTCUSDT `, {
+    reply_markup: {
+      force_reply: true,
+    },
+  });
+  bot.on("text", async (ctx) => {
+    const { text } = ctx.message;
+    const { accountType, coin }: any = text;
+    const bybit = new Bybit(
+      CONFIG.BYBIT_API_KEY,
+      CONFIG.BYBIT_API_SECRET,
+      CONFIG.BYBIT_TESTNET === "true"
+    );
+    const balance = await bybit.walletBalance({
+      accountType,
+      coin,
+    });
+    console.log(balance);
+    ctx.reply(`Balance is ${balance?.map((b) => b.coin)}`);
+  });
+});
+
 export { bot };
