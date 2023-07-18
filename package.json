@@ -19,6 +19,7 @@
     "@types/express": "^4.17.17",
     "@types/node": "^20.4.1",
     "@types/typescript": "^2.0.0",
+    "binance": "^2.8.6",
     "bybit-api": "^3.7.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",

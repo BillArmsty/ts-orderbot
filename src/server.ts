@@ -2,11 +2,13 @@ import express from "express";
 import { Routes } from "./routes";
 import { Middleware } from "./middlewares";
 import { bot } from "./bot/telegram";
+import { BinanceRoutes } from "./routes/binanceApi";
 
 
 const app = express();
 Middleware(app);
 Routes(app);
+BinanceRoutes(app);
 const Main = async () => {
   try {
     console.log("-------------".repeat(5));

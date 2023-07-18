@@ -7,4 +7,8 @@ export const CONFIG = {
     MAIN_URL: process.env.MAIN_URL || '',
     BOT_TOKEN: process.env.BOT_TOKEN || '',
     WHITELISTED_USERS: process.env.WHITELISTED_USERS || '',
+    BINANCE_API_KEY: process.env.BINANCE_API_KEY || '',
+    BINANCE_API_SECRET: process.env.BINANCE_API_SECRET || '',
+    BINANCE_TESTNET: 'true',
+    useTestnet: 'true',
 }
