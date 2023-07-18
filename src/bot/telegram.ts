@@ -2,8 +2,26 @@ import { Telegraf, Markup, Context } from "telegraf";
 import { CONFIG } from "../config/config";
 import { Bybit } from "../exchange/bybit";
 import { normalizeMessage } from "./tgUtils";
+import { Binance } from "../exchange/binance";
 
 const bot = new Telegraf(CONFIG.BOT_TOKEN);
+
+// bot.start((ctx) => {
+//   ctx.reply(
+//     `Welcome to the ULTIMATE Trading Bot
+//     Please Select A Platform:`,
+//     {
+//       reply_markup: {
+//         inline_keyboard: [
+//           [
+//             { text: "📊 BYBIT 📊", callback_data: "bybit" },
+//             { text: "📊 BINANCE 📊", callback_data: "binance" },
+//           ],
+//         ],
+//       },
+//     }
+//   );
+// });
 
 bot.start((ctx) => {
   ctx.reply(
@@ -33,7 +51,39 @@ bot.start((ctx) => {
     }
   );
 });
+
 //Create Bot Menu
+// bot.action("binance", async (ctx) => {
+//   try{
+//   ctx.reply(`Please Enter A Symbol To Get Price ie ETHUSDT : `, {
+//     reply_markup: {
+//       force_reply: true,
+//     },
+//   });
+
+//   bot.on("text", async (ctx) => {
+//     const { text } : any = ctx.message;
+//     const symbol = normalizeMessage(text);
+    
+//     const binance = new Binance(
+//       CONFIG.BINANCE_API_KEY,
+//       CONFIG.BINANCE_API_SECRET,
+//       true
+//     );
+
+//     const latestPrice = await binance.getPrice({
+//       symbol,
+//     })
+//     console.log(latestPrice);
+//     ctx.reply(`The Latest Price For ${symbol} is ${latestPrice}`);
+    
+//   });
+// } catch (error) {
+//   console.log(`Error getting price: ${error}`);
+// }
+
+// });
+
 bot.command("menu", async (ctx) => {
   ctx.reply(`Please Select an Option:`, {
     reply_markup: {
@@ -85,7 +135,7 @@ bot.action("price", async (ctx) => {
     });
     console.log(price);
 
-    ctx.reply(`Price of ${symbol} is ${price}`, {parse_mode: "Markdown"});
+    ctx.reply(`Price of ${symbol} is ${price}`, { parse_mode: "Markdown" });
   });
 });
 
@@ -111,17 +161,19 @@ bot.action("buy", async (ctx) => {
     const orderPlaced = await bybit.placeOrder({
       category: "linear",
       side: side,
-      symbol : symbol,
-      qty : qty,
-      orderType : orderType,
-      price : price,
+      symbol: symbol,
+      qty: qty,
+      orderType: orderType,
+      price: price,
 
       timeInForce: "GTC",
       reduceOnly: false,
       closeOnTrigger: false,
     });
     console.log(orderPlaced);
-    ctx.reply(`Buy order placed successfully ${orderPlaced?.orderId}`, {parse_mode: "Markdown"});
+    ctx.reply(`Buy order placed successfully ${orderPlaced?.orderId}`, {
+      parse_mode: "Markdown",
+    });
     // ctx.reply(`Buy order failed ${orderPlaced?.ret_msg}`)
   });
 });
@@ -147,10 +199,10 @@ bot.action("sell", async (ctx) => {
     const orderPlaced = await bybit.placeOrder({
       category: "linear",
       side: side,
-      symbol : symbol,
-      qty : qty,
-      orderType : orderType,
-      price : price,
+      symbol: symbol,
+      qty: qty,
+      orderType: orderType,
+      price: price,
       timeInForce: "GTC",
       reduceOnly: false,
       closeOnTrigger: false,
