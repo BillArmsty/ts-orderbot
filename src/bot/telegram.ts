@@ -6,45 +6,16 @@ import { Binance } from "../exchange/binance";
 
 const bot = new Telegraf(CONFIG.BOT_TOKEN);
 
-// bot.start((ctx) => {
-//   ctx.reply(
-//     `Welcome to the ULTIMATE Trading Bot
-//     Please Select A Platform:`,
-//     {
-//       reply_markup: {
-//         inline_keyboard: [
-//           [
-//             { text: "📊 BYBIT 📊", callback_data: "bybit" },
-//             { text: "📊 BINANCE 📊", callback_data: "binance" },
-//           ],
-//         ],
-//       },
-//     }
-//   );
-// });
-
 bot.start((ctx) => {
   ctx.reply(
-    `Welcome to the Bybit Trading Bot
-  Please Select an Option:`,
+    `Welcome to the ULTIMATE Trading Bot
+    Please Select A Platform:`,
     {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: "📈 Buy Order", callback_data: "buy" },
-            { text: "📈 Sell Order", callback_data: "sell" },
-          ],
-          [
-            { text: "📊 Active Orders", callback_data: "activeOrders" },
-            { text: "📈 Get Price", callback_data: "price" },
-          ],
-          [
-            { text: "📉 Cancel Order", callback_data: "cancel" },
-            { text: "📉 Cancel All Orders", callback_data: "cancelAll" },
-          ],
-          [
-            { text: "📊 Historical Orders", callback_data: "historicalOrders" },
-            { text: "💰 Wallet Balance", callback_data: "balance" },
+            { text: "📊 BYBIT 📊", callback_data: "bybit" },
+            { text: "📊 BINANCE 📊", callback_data: "binance" },
           ],
         ],
       },
@@ -52,37 +23,87 @@ bot.start((ctx) => {
   );
 });
 
+bot.start((ctx) => {});
+
+bot.action("bybit", async (ctx) => {
+  try {
+    ctx.reply(
+      `Bybit Trading Bot Menu
+    Please Select an Option:`,
+      {
+        reply_markup: {
+          inline_keyboard: [
+            [
+              { text: "📈 Buy Order", callback_data: "buy" },
+              { text: "📈 Sell Order", callback_data: "sell" },
+            ],
+            [
+              { text: "📊 Active Orders", callback_data: "activeOrders" },
+              { text: "📈 Get Price", callback_data: "price" },
+            ],
+            [
+              { text: "📉 Cancel Order", callback_data: "cancel" },
+              { text: "📉 Cancel All Orders", callback_data: "cancelAll" },
+            ],
+            [
+              {
+                text: "📊 Historical Orders",
+                callback_data: "historicalOrders",
+              },
+              { text: "💰 Wallet Balance", callback_data: "balance" },
+            ],
+          ],
+        },
+      }
+    );
+  } catch (error) {
+    console.log(`Error displaying bybit menu: ${error}`);
+  }
+});
+
 //Create Bot Menu
-// bot.action("binance", async (ctx) => {
-//   try{
-//   ctx.reply(`Please Enter A Symbol To Get Price ie ETHUSDT : `, {
-//     reply_markup: {
-//       force_reply: true,
-//     },
-//   });
+bot.action("binance", async (ctx) => {
+  try {
+    ctx.reply(`Please Enter A Symbol To Get Price ie ETHUSDT : `, {
+      reply_markup: {
+        force_reply: true,
+      },
+    });
 
-//   bot.on("text", async (ctx) => {
-//     const { text } : any = ctx.message;
-//     const symbol = normalizeMessage(text);
-    
-//     const binance = new Binance(
-//       CONFIG.BINANCE_API_KEY,
-//       CONFIG.BINANCE_API_SECRET,
-//       true
-//     );
+    bot.on("text", async (ctx) => {
+      const { text }: any = ctx.message;
+      const symbol = normalizeMessage(text);
 
-//     const latestPrice = await binance.getPrice({
-//       symbol,
-//     })
-//     console.log(latestPrice);
-//     ctx.reply(`The Latest Price For ${symbol} is ${latestPrice}`);
-    
-//   });
-// } catch (error) {
-//   console.log(`Error getting price: ${error}`);
-// }
+      const binance = new Binance(
+        CONFIG.BINANCE_API_KEY,
+        CONFIG.BINANCE_API_SECRET,
+        true
+      );
 
-// });
+      const latestPrice = await binance.getPrice({
+        symbol,
+      });
+
+      // Check if latestPrice is an array
+      if (Array.isArray(latestPrice)) {
+        if (latestPrice.length === 0) {
+          ctx.reply(`No price data available for ${symbol}.`);
+          return;
+        }
+
+        // If it's an array, get the price from the first element
+        const price = latestPrice[0].price;
+        ctx.reply(`The Latest Price For ${symbol} is ${price}`);
+      } else {
+        // If it's a single object, directly get the price
+        const price = latestPrice.price;
+        ctx.reply(`The Latest Price For ${symbol} is ${price}`);
+      }
+    });
+  } catch (error) {
+    console.log(`Error getting price: ${error}`);
+  }
+});
 
 bot.command("menu", async (ctx) => {
   ctx.reply(`Please Select an Option:`, {
@@ -133,7 +154,6 @@ bot.action("price", async (ctx) => {
       symbol,
       category,
     });
-    console.log(price);
 
     ctx.reply(`Price of ${symbol} is ${price}`, { parse_mode: "Markdown" });
   });

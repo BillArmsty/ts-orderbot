@@ -41,15 +41,19 @@ export class Bybit {
         let _result = result.category;
         if (_result == "linear") {
           return result.list.map((TickerLinearInverseV5: any) => {
+            
             let _price = TickerLinearInverseV5.lastPrice;
+            console.log(_price);
+            
             return _price;
+           
           });
         }
       }
     } catch (error) {
       console.log(`Error getting price: ${error}`);
     }
-    return [];
+    return null;
   };
 
   //Make a order
