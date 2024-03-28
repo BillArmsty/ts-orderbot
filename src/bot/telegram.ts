@@ -4,7 +4,7 @@ import { Bybit } from "../exchange/bybit";
 import { normalizeMessage } from "./tgUtils";
 import { Binance } from "../exchange/binance";
 
-const bot = new Telegraf("5879763135:AAEIyRKmVcycDvB2mMyOq0iSGN_5vzPD_lA")
+const bot = new Telegraf(CONFIG.BOT_TOKEN);
 
 bot.start((ctx) => {
   ctx.reply(
