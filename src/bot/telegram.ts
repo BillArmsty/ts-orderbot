@@ -4,7 +4,7 @@ import { Bybit } from "../exchange/bybit";
 import { normalizeMessage } from "./tgUtils";
 import { Binance } from "../exchange/binance";
 
-const bot = new Telegraf(CONFIG.BOT_TOKEN);
+const bot = new Telegraf("5879763135:AAEIyRKmVcycDvB2mMyOq0iSGN_5vzPD_lA")
 
 bot.start((ctx) => {
   ctx.reply(
@@ -71,16 +71,16 @@ bot.action("binance", async (ctx) => {
     });
 
     bot.on("text", async (ctx) => {
-      const { text }: any = ctx.message;
-      const symbol = normalizeMessage(text);
+      let { text }: any = ctx.message;
+      let symbol = normalizeMessage(text);
 
-      const binance = new Binance(
+      let binance = new Binance(
         CONFIG.BINANCE_API_KEY,
         CONFIG.BINANCE_API_SECRET,
         true
       );
 
-      const latestPrice = await binance.getPrice({
+      let latestPrice = await binance.getPrice({
         symbol,
       });
 
@@ -92,11 +92,11 @@ bot.action("binance", async (ctx) => {
         }
 
         // If it's an array, get the price from the first element
-        const price = latestPrice[0].price;
+        let price = latestPrice[0].price;
         ctx.reply(`The Latest Price For ${symbol} is ${price}`);
       } else {
         // If it's a single object, directly get the price
-        const price = latestPrice.price;
+        let price = latestPrice.price;
         ctx.reply(`The Latest Price For ${symbol} is ${price}`);
       }
     });
@@ -141,16 +141,16 @@ bot.action("price", async (ctx) => {
   //ie: BTCUSDT, linear
 
   bot.on("text", async (ctx) => {
-    const { text }: any = ctx.message;
+    let { text }: any = ctx.message;
 
     let [symbol, category]: any = normalizeMessage(text).split(",");
 
-    const bybit = new Bybit(
+    let bybit = new Bybit(
       CONFIG.BYBIT_API_KEY,
       CONFIG.BYBIT_API_SECRET,
       CONFIG.BYBIT_TESTNET === "true"
     );
-    const price = await bybit.getPrice({
+    let price = await bybit.getPrice({
       symbol,
       category,
     });
@@ -170,15 +170,15 @@ bot.action("buy", async (ctx) => {
     }
   );
   bot.on("text", async (ctx) => {
-    const { text } = ctx.message;
-    const [side, symbol, qty, orderType, price]: any =
+    let { text } = ctx.message;
+    let [side, symbol, qty, orderType, price]: any =
       normalizeMessage(text).split(",");
-    const bybit = new Bybit(
+    let bybit = new Bybit(
       CONFIG.BYBIT_API_KEY,
       CONFIG.BYBIT_API_SECRET,
       CONFIG.BYBIT_TESTNET === "true"
     );
-    const orderPlaced = await bybit.placeOrder({
+    let orderPlaced = await bybit.placeOrder({
       category: "linear",
       side: side,
       symbol: symbol,
@@ -209,14 +209,14 @@ bot.action("sell", async (ctx) => {
     }
   );
   bot.on("text", async (ctx) => {
-    const { text } = ctx.message;
-    const { side, symbol, qty, orderType, price }: any = text;
-    const bybit = new Bybit(
+    let { text } = ctx.message;
+    let { side, symbol, qty, orderType, price }: any = text;
+    let bybit = new Bybit(
       CONFIG.BYBIT_API_KEY,
       CONFIG.BYBIT_API_SECRET,
       CONFIG.BYBIT_TESTNET === "true"
     );
-    const orderPlaced = await bybit.placeOrder({
+    let orderPlaced = await bybit.placeOrder({
       category: "linear",
       side: side,
       symbol: symbol,
@@ -240,14 +240,14 @@ bot.action("cancel", async (ctx) => {
     },
   });
   bot.on("text", async (ctx) => {
-    const { text } = ctx.message;
-    const { symbol, orderId, category }: any = text;
-    const bybit = new Bybit(
+    let { text } = ctx.message;
+    let { symbol, orderId, category }: any = text;
+    let bybit = new Bybit(
       CONFIG.BYBIT_API_KEY,
       CONFIG.BYBIT_API_SECRET,
       CONFIG.BYBIT_TESTNET === "true"
     );
-    const orderCancelled = await bybit.cancelOrder({
+    let orderCancelled = await bybit.cancelOrder({
       symbol,
       orderId,
       category,
@@ -265,14 +265,14 @@ bot.action("cancelAll", async (ctx) => {
     },
   });
   bot.on("text", async (ctx) => {
-    const { text } = ctx.message;
-    const { symbol, category }: any = text;
-    const bybit = new Bybit(
+    let { text } = ctx.message;
+    let { symbol, category }: any = text;
+    let bybit = new Bybit(
       CONFIG.BYBIT_API_KEY,
       CONFIG.BYBIT_API_SECRET,
       CONFIG.BYBIT_TESTNET === "true"
     );
-    const orderCancelled = await bybit.cancelAllOrders({
+    let orderCancelled = await bybit.cancelAllOrders({
       symbol,
       category,
     });
@@ -289,14 +289,14 @@ bot.action("activeOrders", async (ctx) => {
     },
   });
   bot.on("text", async (ctx) => {
-    const { text } = ctx.message;
-    const { symbol, category }: any = text;
-    const bybit = new Bybit(
+    let { text } = ctx.message;
+    let { symbol, category }: any = text;
+    let bybit = new Bybit(
       CONFIG.BYBIT_API_KEY,
       CONFIG.BYBIT_API_SECRET,
       CONFIG.BYBIT_TESTNET === "true"
     );
-    const activeOrders = await bybit.activeOrders({
+    let activeOrders = await bybit.activeOrders({
       symbol,
       category,
     });
@@ -313,14 +313,14 @@ bot.action("historicalOrders", async (ctx) => {
     },
   });
   bot.on("text", async (ctx) => {
-    const { text } = ctx.message;
-    const { symbol, category }: any = text;
-    const bybit = new Bybit(
+    let { text } = ctx.message;
+    let { symbol, category }: any = text;
+    let bybit = new Bybit(
       CONFIG.BYBIT_API_KEY,
       CONFIG.BYBIT_API_SECRET,
       CONFIG.BYBIT_TESTNET === "true"
     );
-    const historicalOrders = await bybit.historicalOrders({
+    let historicalOrders = await bybit.historicalOrders({
       symbol,
       category,
     });
@@ -339,14 +339,14 @@ bot.action("balance", async (ctx) => {
     },
   });
   bot.on("text", async (ctx) => {
-    const { text } = ctx.message;
-    const { accountType, coin }: any = text;
-    const bybit = new Bybit(
+    let { text } = ctx.message;
+    let { accountType, coin }: any = text;
+    let bybit = new Bybit(
       CONFIG.BYBIT_API_KEY,
       CONFIG.BYBIT_API_SECRET,
       CONFIG.BYBIT_TESTNET === "true"
     );
-    const balance = await bybit.walletBalance({
+    let balance = await bybit.walletBalance({
       accountType,
       coin,
     });

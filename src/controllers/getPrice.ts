@@ -9,8 +9,7 @@ async function getPrice(req: Request, res: Response) {
       if (!category || !symbol) {
         return res.status(200).json({
           status: "failed",
-          error:
-            "Please specify the category and symbol",
+          error:"Please specify the category and symbol",
         });
       }
       const bybit = new Bybit(

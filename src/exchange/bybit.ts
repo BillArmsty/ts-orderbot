@@ -37,6 +37,7 @@ export class Bybit {
     try {
       const { retCode, result, retMsg } = await this.client.getTickers(params);
 
+
       if (retCode == 0 && retMsg == "OK") {
         let _result = result.category;
         if (_result == "linear") {

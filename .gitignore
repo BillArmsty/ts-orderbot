@@ -1,6 +1,6 @@
-/target
 .env
-
-.gitignore
+.yarn/
+node_modules/
+build/
 
 node_modules/
